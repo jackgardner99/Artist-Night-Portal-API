@@ -1,0 +1,28 @@
+Table Users {
+    id int [pk]
+    name varchar
+    email varchar
+    password varchar
+}
+
+Table UserUtilities {
+    id int [pk]
+    user int [ref: > Users.id]
+    spotify_link url
+    apple_link url
+    youtube_link url
+    user_image image
+}
+
+Table Charts {
+    id int [pk]
+    user_id int [ref: > Users.id]
+    chart_image image
+}
+
+Table SignupSheet { 
+    id int [pk]
+    user_id int [ref: > Users.id]
+    
+}
+
