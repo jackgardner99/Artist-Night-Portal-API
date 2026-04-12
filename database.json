@@ -1,0 +1,61 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Jack Holliday",
+      "isBand": true,
+      "email": "jackhollidaylive@gmail.com",
+      "password": "@Lolcat00",
+      "spotifyLink": "https://open.spotify.com/artist/5DEzVzTnbMLeUVQwKqN0pe?si=PYli4D3iSj6zwBYmgbPMvg",
+      "appleMusicLink": "https://music.apple.com/us/artist/jack-holliday/1511116376",
+      "youtubeLink": "https://www.youtube.com/@jackholliday8529",
+      "isHere": false
+    },
+    {
+      "id": 2,
+      "name": "Kadi Beth",
+      "isBand": false,
+      "email": "kaitlinbortle@gmail.com",
+      "password": "Kaitl!n123",
+      "spotifyLink": "",
+      "appleMusicLink": "",
+      "youtubeLink": "",
+      "isHere": false
+    },
+    {
+      "id": 3,
+      "name": "John Gardner",
+      "email": "jtgardner99@gmail.com",
+      "password": "lolcat00",
+      "isBand": false,
+      "spotifyLink": "",
+      "appleMusicLink": "",
+      "youtubeLink": "",
+      "isHere": false
+    },
+    {
+      "name": "Joe Mama",
+      "email": "joemama123@gmail.com",
+      "password": "joemama123",
+      "id": 4
+    },
+    {
+      "name": "Taylor Swift",
+      "email": "taylorswift@taylor.com",
+      "password": "taylorrocks",
+      "isBand": false,
+      "spotifyLink": "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02?si=c99b1ac78a1c4994",
+      "appleMusicLink": "https://music.apple.com/us/artist/taylor-swift/159260351",
+      "youtubeLink": "https://www.youtube.com/channel/UCqECaJ8Gagnn7YCbPEzWH6g",
+      "isHere": false,
+      "id": 5
+    }
+  ],
+  "charts": [],
+  "signupSheet": [
+    {
+      "userId": 3,
+      "id": 1
+    }
+  ]
+}
