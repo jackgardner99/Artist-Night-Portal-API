@@ -11,11 +11,11 @@ class MyProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = MyProfileSerializer(request.user)
+        serializer = MyProfileSerializer(request.user, context={'request': request})
         return Response(serializer.data)
 
     def put(self, request):
-        serializer = MyProfileSerializer(request.user, data=request.data, partial=True)
+        serializer = MyProfileSerializer(request.user, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -27,7 +27,7 @@ class UserProfileListView(APIView):
 
     def get(self, request):
         users = User.objects.select_related('user_utilities').all()
-        serializer = UserProfileSerializer(users, many=True)
+        serializer = UserProfileSerializer(users, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -39,5 +39,5 @@ class UserProfileView(APIView):
             user = User.objects.select_related('user_utilities').get(pk=pk)
         except User.DoesNotExist:
             return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = UserProfileSerializer(user)
+        serializer = UserProfileSerializer(user, context={'request': request})
         return Response(serializer.data)

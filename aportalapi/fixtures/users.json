@@ -1,0 +1,19 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "jholliday",
+      "password": "pbkdf2_sha256$1200000$of3XIEJPUjdwbAk5CKUS9z$MxmDaAzrPzWqjXETfnFaWtsdUP7E7YNQS/RR/EF8dOg=",
+      "first_name": "Jack",
+      "last_name": "Holliday",
+      "email": "",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2026-05-07T00:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
