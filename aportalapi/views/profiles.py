@@ -22,6 +22,15 @@ class MyProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserProfileListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        users = User.objects.select_related('user_utilities').all()
+        serializer = UserProfileSerializer(users, many=True)
+        return Response(serializer.data)
+
+
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 

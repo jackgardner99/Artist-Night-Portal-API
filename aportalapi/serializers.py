@@ -38,6 +38,37 @@ class MyProfileSerializer(serializers.ModelSerializer):
         return instance
 
 
+class RegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    spotify_link = serializers.URLField(required=False, allow_blank=True)
+    apple_link = serializers.URLField(required=False, allow_blank=True)
+    youtube_link = serializers.URLField(required=False, allow_blank=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'first_name', 'last_name',
+                  'spotify_link', 'apple_link', 'youtube_link']
+        extra_kwargs = {
+            'email': {'required': False, 'allow_blank': True},
+            'first_name': {'required': False, 'allow_blank': True},
+            'last_name': {'required': False, 'allow_blank': True},
+        }
+
+    def create(self, validated_data):
+        spotify_link = validated_data.pop('spotify_link', '')
+        apple_link = validated_data.pop('apple_link', '')
+        youtube_link = validated_data.pop('youtube_link', '')
+
+        user = User.objects.create_user(**validated_data)
+
+        user.user_utilities.spotify_link = spotify_link
+        user.user_utilities.apple_link = apple_link
+        user.user_utilities.youtube_link = youtube_link
+        user.user_utilities.save()
+
+        return user
+
+
 class ChartSerializer(serializers.ModelSerializer):
     uploaded_by = serializers.ReadOnlyField(source='user.username')
 
