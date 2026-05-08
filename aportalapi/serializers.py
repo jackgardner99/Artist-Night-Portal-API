@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import UserUtilities, Chart, SignupSheet
+from .models import UserUtilities, Chart, Lyrics, SignupSheet
 
 
 class UserUtilitiesSerializer(serializers.ModelSerializer):
@@ -101,6 +101,9 @@ class SignupSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = SignupSheet
         fields = ['id', 'username', 'chart', 'chart_file', 'completed']
+        extra_kwargs = {
+            'chart': {'required': False, 'allow_null': True},
+        }
 
     def get_chart_file(self, obj):
         request = self.context.get('request')
@@ -108,3 +111,9 @@ class SignupSheetSerializer(serializers.ModelSerializer):
             url = obj.chart.chart_file.url
             return request.build_absolute_uri(url) if request else url
         return None
+
+
+class LyricsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lyrics
+        fields = ['id', 'chart', 'lyrics_file']
