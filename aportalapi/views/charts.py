@@ -18,5 +18,16 @@ class ChartViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     http_method_names = ['get', 'post', 'delete']
 
+    def create(self, request, *args, **kwargs):
+        file = request.FILES.get('chart_file')
+        if file:
+            existing = Chart.objects.filter(
+                user=request.user,
+                chart_file__endswith=file.name
+            ).first()
+            if existing:
+                return Response(ChartSerializer(existing).data, status=status.HTTP_200_OK)
+        return super().create(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

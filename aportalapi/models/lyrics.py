@@ -1,6 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .charts import Chart
 
 
 def validate_lyrics_file(file):
@@ -11,5 +11,5 @@ def validate_lyrics_file(file):
 
 
 class Lyrics(models.Model):
-    chart = models.OneToOneField(Chart, on_delete=models.CASCADE, related_name='lyrics')
-    lyrics_file = models.FileField(validators=[validate_lyrics_file])
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_lyrics')
+    lyrics_file = models.FileField(validators=[validate_lyrics_file], blank=True)

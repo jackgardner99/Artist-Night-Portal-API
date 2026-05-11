@@ -94,16 +94,42 @@ class ChartSerializer(serializers.ModelSerializer):
         fields = ['id', 'uploaded_by', 'chart_file']
 
 
+class LyricsSerializer(serializers.ModelSerializer):
+    uploaded_by = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Lyrics
+        fields = ['id', 'uploaded_by', 'lyrics_file']
+
+
 class SignupSheetSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='user.username')
+    first_name = serializers.ReadOnlyField(source='user.first_name')
+    last_name = serializers.ReadOnlyField(source='user.last_name')
+    user_image = serializers.SerializerMethodField()
     chart_file = serializers.SerializerMethodField()
+    lyrics_file = serializers.SerializerMethodField()
 
     class Meta:
         model = SignupSheet
-        fields = ['id', 'username', 'chart', 'chart_file', 'completed']
+        fields = [
+            'id', 'username', 'first_name', 'last_name', 'user_image',
+            'chart', 'chart_file', 'lyrics', 'lyrics_file', 'completed',
+        ]
         extra_kwargs = {
             'chart': {'required': False, 'allow_null': True},
+            'lyrics': {'required': False, 'allow_null': True},
         }
+
+    def get_user_image(self, obj):
+        request = self.context.get('request')
+        try:
+            image = obj.user.user_utilities.user_image
+            if image:
+                return request.build_absolute_uri(image.url) if request else image.url
+        except Exception:
+            pass
+        return None
 
     def get_chart_file(self, obj):
         request = self.context.get('request')
@@ -112,8 +138,9 @@ class SignupSheetSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(url) if request else url
         return None
 
-
-class LyricsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lyrics
-        fields = ['id', 'chart', 'lyrics_file']
+    def get_lyrics_file(self, obj):
+        request = self.context.get('request')
+        if obj.lyrics and obj.lyrics.lyrics_file:
+            url = obj.lyrics.lyrics_file.url
+            return request.build_absolute_uri(url) if request else url
+        return None
