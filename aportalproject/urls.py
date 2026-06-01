@@ -1,6 +1,4 @@
 from django.urls import include, path
-from django.conf import settings
-from django.conf.urls.static import static
 from rest_framework import routers
 from aportalapi.views.auth import RegisterView, LoginView
 from aportalapi.views.profiles import MyProfileView, UserProfileView, UserProfileListView
@@ -20,4 +18,4 @@ urlpatterns = [
     path('profiles', UserProfileListView.as_view(), name='profile-list'),
     path('profiles/me', MyProfileView.as_view(), name='my-profile'),
     path('profiles/<int:pk>', UserProfileView.as_view(), name='user-profile'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
