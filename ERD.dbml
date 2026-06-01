@@ -23,6 +23,5 @@ Table Charts {
 Table SignupSheet { 
     id int [pk]
     user_id int [ref: > Users.id]
-    
 }
 
