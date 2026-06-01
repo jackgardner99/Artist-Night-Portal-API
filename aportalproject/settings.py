@@ -1,7 +1,8 @@
 
 import os
-import dj_database_url
 from pathlib import Path
+
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,12 +39,13 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ORIGIN_WHITELIST = (
+_cors_extra = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-)
+] + [origin for origin in _cors_extra.split(',') if origin]
 
 
 MIDDLEWARE = [
@@ -126,9 +128,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dyqtyzktp',
-    'API_KEY': '855968322561388',
-    'API_SECRET': 'J4DeR3WzQjKq8RXvnX2PXVO565M',
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dyqtyzktp'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '855968322561388'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'J4DeR3WzQjKq8RXvnX2PXVO565M'),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
