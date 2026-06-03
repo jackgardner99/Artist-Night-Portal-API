@@ -149,7 +149,7 @@ CLOUDINARY_STORAGE = {
 
 STORAGES = {
     'default': {
-        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        'BACKEND': 'aportalproject.storage.AutoTypeCloudinaryStorage',
     },
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
