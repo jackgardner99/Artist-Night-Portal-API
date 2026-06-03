@@ -14,6 +14,7 @@ def get_resource_type(name):
 class AutoTypeCloudinaryStorage(MediaCloudinaryStorage):
     def _save(self, name, content):
         resource_type = get_resource_type(name)
+        content.seek(0)
         response = cloudinary.uploader.upload(
             content,
             public_id=name,
