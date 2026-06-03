@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 
+import cloudinary
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,10 +128,20 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dyqtyzktp')
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', '855968322561388')
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', 'J4DeR3WzQjKq8RXvnX2PXVO565M')
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET,
+)
+
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dyqtyzktp'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '855968322561388'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'J4DeR3WzQjKq8RXvnX2PXVO565M'),
+    'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
+    'API_KEY': CLOUDINARY_API_KEY,
+    'API_SECRET': CLOUDINARY_API_SECRET,
 }
 
 STORAGES = {
