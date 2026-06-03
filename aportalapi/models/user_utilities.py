@@ -9,10 +9,10 @@ class UserUtilities(models.Model):
     spotify_link = models.URLField(blank=True)
     apple_link = models.URLField(blank=True)
     youtube_link = models.URLField(blank=True)
-    user_image = models.ImageField(blank=True)
+    user_image = models.FileField(blank=True)
 
 
 @receiver(post_save, sender=User)
-def create_user_utilities(sender, instance, created, **kwargs):
+def create_user_utilities(_sender, instance, created, **kwargs):
     if created:
         UserUtilities.objects.create(user=instance)

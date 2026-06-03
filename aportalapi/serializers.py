@@ -4,7 +4,7 @@ from .models import UserUtilities, Chart, Lyrics, SignupSheet
 
 
 class UserUtilitiesSerializer(serializers.ModelSerializer):
-    user_image = serializers.ImageField(required=False, allow_null=True)
+    user_image = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = UserUtilities
@@ -21,7 +21,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class MyProfileSerializer(serializers.ModelSerializer):
     utilities = UserUtilitiesSerializer(source='user_utilities', read_only=True)
-    user_image = serializers.ImageField(write_only=True, required=False, allow_null=True)
+    user_image = serializers.FileField(write_only=True, required=False, allow_null=True)
     spotify_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     apple_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     youtube_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
