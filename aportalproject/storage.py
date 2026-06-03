@@ -19,11 +19,16 @@ class AutoTypeCloudinaryStorage(MediaCloudinaryStorage):
             content,
             public_id=name,
             resource_type=resource_type,
+            type='upload',
             overwrite=True,
         )
         return response['public_id']
 
     def url(self, name):
         resource_type = get_resource_type(name)
-        url, _ = cloudinary.utils.cloudinary_url(name, resource_type=resource_type)
+        url, _ = cloudinary.utils.cloudinary_url(
+            name,
+            resource_type=resource_type,
+            type='upload',
+        )
         return url
