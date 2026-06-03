@@ -142,6 +142,9 @@ CLOUDINARY_STORAGE = {
     'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
     'API_KEY': CLOUDINARY_API_KEY,
     'API_SECRET': CLOUDINARY_API_SECRET,
+    'STATIC_IMAGES_EXTENSIONS': [
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'ico',
+    ],
 }
 
 STORAGES = {
