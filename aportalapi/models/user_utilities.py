@@ -13,6 +13,6 @@ class UserUtilities(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_user_utilities(_sender, instance, created, **kwargs):
+def create_user_utilities(sender, instance, created, **kwargs):  # noqa: ARG001
     if created:
         UserUtilities.objects.create(user=instance)
