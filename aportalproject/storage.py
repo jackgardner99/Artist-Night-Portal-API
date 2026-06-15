@@ -14,10 +14,11 @@ def get_resource_type(name):
 class AutoTypeCloudinaryStorage(MediaCloudinaryStorage):
     def _save(self, name, content):
         resource_type = get_resource_type(name)
+        public_id = name.rsplit('.', 1)[0] if resource_type == 'image' and '.' in name else name
         content.seek(0)
         response = cloudinary.uploader.upload(
             content,
-            public_id=name,
+            public_id=public_id,
             resource_type=resource_type,
             type='upload',
             overwrite=True,
