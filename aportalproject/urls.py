@@ -3,7 +3,7 @@ from rest_framework import routers
 from aportalapi.views.auth import RegisterView, LoginView
 from aportalapi.views.profiles import MyProfileView, UserProfileView, UserProfileListView
 from aportalapi.views.charts import ChartViewSet
-from aportalapi.views.signup_sheet import SignupSheetViewSet
+from aportalapi.views.signup_sheet import SignupSheetViewSet, GuestSignupView
 from aportalapi.views.lyrics import LyricsViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -18,4 +18,5 @@ urlpatterns = [
     path('profiles', UserProfileListView.as_view(), name='profile-list'),
     path('profiles/me', MyProfileView.as_view(), name='my-profile'),
     path('profiles/<int:pk>', UserProfileView.as_view(), name='user-profile'),
+    path('guest-signup', GuestSignupView.as_view(), name='guest-signup'),
 ]
