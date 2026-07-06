@@ -57,6 +57,7 @@ class SignupSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['delete'], url_path='clear')
     def clear(self, request):
+        User.objects.filter(username__startswith='guest_').delete()
         SignupSheet.objects.all().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
