@@ -30,7 +30,7 @@ class UserProfileListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        users = User.objects.select_related('user_utilities').all()
+        users = User.objects.select_related('user_utilities').exclude(username__startswith='guest_')
         serializer = UserProfileSerializer(users, many=True, context={'request': request})
         return Response(serializer.data)
 
