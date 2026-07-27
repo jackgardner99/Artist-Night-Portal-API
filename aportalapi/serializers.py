@@ -66,7 +66,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ['username', 'password', 'email', 'first_name', 'last_name',
                   'spotify_link', 'apple_link', 'youtube_link']
         extra_kwargs = {
-            'email': {'required': False, 'allow_blank': True},
+            'email': {'required': True},
             'first_name': {'required': False, 'allow_blank': True},
             'last_name': {'required': False, 'allow_blank': True},
         }
