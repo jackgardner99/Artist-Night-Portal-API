@@ -10,6 +10,7 @@ class UserUtilities(models.Model):
     apple_link = models.URLField(blank=True)
     youtube_link = models.URLField(blank=True)
     user_image = models.FileField(blank=True)
+    marketing_opt_in = models.BooleanField(default=False)
 
 
 @receiver(post_save, sender=User)

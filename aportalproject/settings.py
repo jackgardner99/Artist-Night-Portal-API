@@ -162,3 +162,7 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Google Apps Script web app that emails the signup list when the sheet is cleared (disabled when unset)
+SIGNUP_EMAIL_WEBHOOK_URL = os.environ.get('SIGNUP_EMAIL_WEBHOOK_URL', '')
+SIGNUP_EMAIL_WEBHOOK_SECRET = os.environ.get('SIGNUP_EMAIL_WEBHOOK_SECRET', '')

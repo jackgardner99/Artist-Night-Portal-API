@@ -1,3 +1,6 @@
+import logging
+
+import cloudinary.exceptions
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,6 +8,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from aportalapi.serializers import MyProfileSerializer, UserProfileSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class MyProfileView(APIView):
@@ -17,7 +22,12 @@ class MyProfileView(APIView):
     def put(self, request):
         serializer = MyProfileSerializer(request.user, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            try:
+                serializer.save()
+            except cloudinary.exceptions.Error:
+                logger.exception('Profile image upload failed for user %s', request.user.pk)
+                return Response({'user_image': 'Image upload failed. Try a smaller JPG or PNG.'},
+                                status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

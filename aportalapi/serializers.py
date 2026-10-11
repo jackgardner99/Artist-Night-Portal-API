@@ -11,6 +11,11 @@ class UserUtilitiesSerializer(serializers.ModelSerializer):
         fields = ['spotify_link', 'apple_link', 'youtube_link', 'user_image']
 
 
+class MyUtilitiesSerializer(UserUtilitiesSerializer):
+    class Meta(UserUtilitiesSerializer.Meta):
+        fields = UserUtilitiesSerializer.Meta.fields + ['marketing_opt_in']
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     utilities = UserUtilitiesSerializer(source='user_utilities', read_only=True)
 
@@ -20,22 +25,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class MyProfileSerializer(serializers.ModelSerializer):
-    utilities = UserUtilitiesSerializer(source='user_utilities', read_only=True)
+    utilities = MyUtilitiesSerializer(source='user_utilities', read_only=True)
     user_image = serializers.FileField(write_only=True, required=False, allow_null=True)
     spotify_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     apple_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     youtube_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
+    marketing_opt_in = serializers.BooleanField(write_only=True, required=False)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'is_superuser', 'utilities',
-                  'user_image', 'spotify_link', 'apple_link', 'youtube_link']
+                  'user_image', 'spotify_link', 'apple_link', 'youtube_link', 'marketing_opt_in']
 
     def update(self, instance, validated_data):
         user_image = validated_data.pop('user_image', None)
         spotify_link = validated_data.pop('spotify_link', None)
         apple_link = validated_data.pop('apple_link', None)
         youtube_link = validated_data.pop('youtube_link', None)
+        marketing_opt_in = validated_data.pop('marketing_opt_in', None)
 
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
@@ -50,6 +57,8 @@ class MyProfileSerializer(serializers.ModelSerializer):
             utilities.apple_link = apple_link
         if youtube_link is not None:
             utilities.youtube_link = youtube_link
+        if marketing_opt_in is not None:
+            utilities.marketing_opt_in = marketing_opt_in
         utilities.save()
 
         return instance
@@ -60,11 +69,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
     spotify_link = serializers.URLField(required=False, allow_blank=True)
     apple_link = serializers.URLField(required=False, allow_blank=True)
     youtube_link = serializers.URLField(required=False, allow_blank=True)
+    marketing_opt_in = serializers.BooleanField(required=False, default=False)
 
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name',
-                  'spotify_link', 'apple_link', 'youtube_link']
+                  'spotify_link', 'apple_link', 'youtube_link', 'marketing_opt_in']
         extra_kwargs = {
             'email': {'required': True},
             'first_name': {'required': False, 'allow_blank': True},
@@ -75,12 +85,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         spotify_link = validated_data.pop('spotify_link', '')
         apple_link = validated_data.pop('apple_link', '')
         youtube_link = validated_data.pop('youtube_link', '')
+        marketing_opt_in = validated_data.pop('marketing_opt_in', False)
 
         user = User.objects.create_user(**validated_data)
 
         user.user_utilities.spotify_link = spotify_link
         user.user_utilities.apple_link = apple_link
         user.user_utilities.youtube_link = youtube_link
+        user.user_utilities.marketing_opt_in = marketing_opt_in
         user.user_utilities.save()
 
         return user
