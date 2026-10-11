@@ -1,14 +1,11 @@
-import uuid
-
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
-from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from aportalapi.models import Chart, Lyrics, SignupSheet
+from aportalapi.models import SignupSheet
 from aportalapi.serializers import SignupSheetSerializer
+from aportalapi.services import signup_email
 
 
 class IsSuperUserOrCreateOnly(permissions.BasePermission):
@@ -57,39 +54,11 @@ class SignupSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['delete'], url_path='clear')
     def clear(self, request):
+        signups = list(SignupSheet.objects.select_related('user', 'user__user_utilities').order_by('id'))
+        signup_email.send_signup_list(signups)
+
+        # Guest signups were removed; this cleans up any guest accounts left from before
         User.objects.filter(username__startswith='guest_').delete()
         SignupSheet.objects.all().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class GuestSignupView(APIView):
-    permission_classes = [permissions.AllowAny]
-    parser_classes = [MultiPartParser, FormParser]
-
-    def post(self, request):
-        first_name = request.data.get('first_name', '').strip()
-        last_name = request.data.get('last_name', '').strip()
-        if not first_name:
-            return Response({'first_name': 'This field is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        username = f'guest_{uuid.uuid4().hex[:12]}'
-        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name)
-
-        try:
-            chart = None
-            chart_file = request.FILES.get('chart_file')
-            if chart_file:
-                chart = Chart.objects.create(user=user, chart_file=chart_file)
-
-            lyrics = None
-            lyrics_file = request.FILES.get('lyrics_file')
-            if lyrics_file:
-                lyrics = Lyrics.objects.create(user=user, lyrics_file=lyrics_file)
-
-            signup = SignupSheet.objects.create(user=user, chart=chart, lyrics=lyrics)
-        except Exception:
-            user.delete()
-            return Response({'detail': 'Failed to process upload.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer = SignupSheetSerializer(signup, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
