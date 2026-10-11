@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from aportalapi.models import SignupSheet
 from aportalapi.serializers import SignupSheetSerializer
-from aportalapi.services import signup_email
+from aportalapi.services import google_sheets, signup_email
 
 
 class IsSuperUserOrCreateOnly(permissions.BasePermission):
@@ -51,6 +51,7 @@ class SignupSheetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        google_sheets.append_signup(self.request.user)
 
     @action(detail=False, methods=['delete'], url_path='clear')
     def clear(self, request):
