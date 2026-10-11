@@ -121,12 +121,13 @@ class SignupSheetSerializer(serializers.ModelSerializer):
     user_image = serializers.SerializerMethodField()
     chart_file = serializers.SerializerMethodField()
     lyrics_file = serializers.SerializerMethodField()
+    signed_up_at = serializers.DateTimeField(source='created_at', read_only=True)
 
     class Meta:
         model = SignupSheet
         fields = [
             'id', 'username', 'first_name', 'last_name', 'user_image',
-            'chart', 'chart_file', 'lyrics', 'lyrics_file', 'completed',
+            'chart', 'chart_file', 'lyrics', 'lyrics_file', 'completed', 'signed_up_at',
         ]
         extra_kwargs = {
             'chart': {'required': False, 'allow_null': True},

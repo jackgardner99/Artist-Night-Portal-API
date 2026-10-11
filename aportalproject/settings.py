@@ -166,7 +166,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Google Apps Script web app that appends each signup to a Google Sheet (disabled when unset)
 GOOGLE_SHEETS_WEBHOOK_URL = os.environ.get('GOOGLE_SHEETS_WEBHOOK_URL', '')
 GOOGLE_SHEETS_WEBHOOK_SECRET = os.environ.get('GOOGLE_SHEETS_WEBHOOK_SECRET', '')
-
-# Google Apps Script web app that emails the signup list when the sheet is cleared (disabled when unset)
-SIGNUP_EMAIL_WEBHOOK_URL = os.environ.get('SIGNUP_EMAIL_WEBHOOK_URL', '')
-SIGNUP_EMAIL_WEBHOOK_SECRET = os.environ.get('SIGNUP_EMAIL_WEBHOOK_SECRET', '')

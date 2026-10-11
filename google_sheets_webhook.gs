@@ -36,6 +36,8 @@ function doPost(e) {
       text(data.email),
       data.marketing_opt_in ? 'Yes' : 'No',
     ]);
+    // e.g. 10/11/2026 7:30 PM; stays a real date so the column still sorts and filters
+    sheet.getRange(sheet.getLastRow(), 1).setNumberFormat('mm/dd/yyyy h:mm AM/PM');
   } finally {
     lock.releaseLock();
   }

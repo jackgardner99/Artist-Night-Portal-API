@@ -9,3 +9,4 @@ class SignupSheet(models.Model):
     chart = models.ForeignKey(Chart, on_delete=models.SET_NULL, related_name="signup_chart", null=True, blank=True)
     lyrics = models.ForeignKey(Lyrics, on_delete=models.SET_NULL, related_name="signup_lyrics", null=True, blank=True)
     completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
