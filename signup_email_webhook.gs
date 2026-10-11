@@ -5,8 +5,8 @@
 // Put the web app URL in SIGNUP_EMAIL_WEBHOOK_URL and the secret in SIGNUP_EMAIL_WEBHOOK_SECRET.
 // Keep the real SECRET in the Apps Script editor only, not in this file.
 
-const SECRET = '81mhcWvwRPn9RjBullHdyon2u-WFKi-3';
-const RECIPIENTS = ['bluehousebandofficial@gmail.com', 'chaz@chazmazzota.com'];
+const SECRET = 'paste-the-same-secret-as-the-server';
+const RECIPIENTS = 'test@gmail.com';
 
 function doPost(e) {
   const data = JSON.parse(e.postData.contents);
@@ -27,7 +27,7 @@ function sendSignupList(signups) {
     `<tr><td>${i + 1}</td><td>${escape(name(s))}</td><td>${escape(s.email || '')}</td><td>${optIn(s)}</td></tr>`);
 
   MailApp.sendEmail({
-    to: RECIPIENTS.join(','),
+    to: RECIPIENTS,
     subject: `Artist Night signups: ${date} (${signups.length})`,
     body: `Artist Night signups for ${date}\n\n${textRows.join('\n')}`,
     htmlBody:
