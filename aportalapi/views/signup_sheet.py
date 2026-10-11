@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from aportalapi.models import SignupSheet
 from aportalapi.serializers import SignupSheetSerializer
-from aportalapi.services import google_sheets, signup_email
+from aportalapi.services import google_sheets
 
 
 class IsSuperUserOrCreateOnly(permissions.BasePermission):
@@ -55,9 +55,6 @@ class SignupSheetViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['delete'], url_path='clear')
     def clear(self, request):
-        signups = list(SignupSheet.objects.select_related('user', 'user__user_utilities').order_by('id'))
-        signup_email.send_signup_list(signups)
-
         # Guest signups were removed; this cleans up any guest accounts left from before
         User.objects.filter(username__startswith='guest_').delete()
         SignupSheet.objects.all().delete()
