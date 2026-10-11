@@ -44,6 +44,17 @@ function doPost(e) {
   return json({ ok: true });
 }
 
+// Run this once from the editor to grant spreadsheet permission; it logs which sheet rows go to
+function authorize() {
+  const spreadsheet = SPREADSHEET_ID
+    ? SpreadsheetApp.openById(SPREADSHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    throw new Error('No spreadsheet found: open this script from the sheet (Extensions > Apps Script) or set SPREADSHEET_ID');
+  }
+  Logger.log('Rows will be added to "%s", tab "%s"', spreadsheet.getName(), SHEET_NAME);
+}
+
 // Users type their own names, so stop anything starting with = + - @ being run as a formula
 function text(value) {
   const s = String(value || '');

@@ -1,4 +1,6 @@
+import html
 import logging
+import re
 import threading
 
 import requests
@@ -9,14 +11,28 @@ logger = logging.getLogger(__name__)
 TIMEOUT = 15
 
 
+def _script_error(page):
+    """Pull the readable message out of an Apps Script HTML error page."""
+    page = re.sub(r'<(script|style).*?</\1>', ' ', page, flags=re.S)
+    return ' '.join(html.unescape(re.sub(r'<[^>]+>', ' ', page)).split())[:300]
+
+
 def _post(payload):
+    who = payload.get('email') or payload.get('first_name')
     try:
         response = requests.post(settings.GOOGLE_SHEETS_WEBHOOK_URL, json=payload, timeout=TIMEOUT)
         response.raise_for_status()
-        if response.json().get('ok') is not True:
-            logger.error('Google Sheets webhook rejected signup: %s', response.text[:200])
-    except (requests.RequestException, ValueError):
-        logger.exception('Google Sheets webhook failed for %s', payload.get('email') or payload.get('first_name'))
+    except requests.RequestException:
+        logger.exception('Google Sheets webhook failed for %s', who)
+        return
+    try:
+        result = response.json()
+    except ValueError:
+        # Apps Script answers with an HTML page when the script itself crashes
+        logger.error('Google Sheets script error for %s: %s', who, _script_error(response.text))
+        return
+    if result.get('ok') is not True:
+        logger.error('Google Sheets webhook rejected signup for %s: %s', who, result)
 
 
 def append_signup(user):
