@@ -8,7 +8,8 @@ class UserUtilitiesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserUtilities
-        fields = ['spotify_link', 'apple_link', 'youtube_link', 'user_image']
+        fields = ['spotify_link', 'apple_link', 'youtube_link', 'user_image', 'signup_count']
+        read_only_fields = ['signup_count']
 
 
 class MyUtilitiesSerializer(UserUtilitiesSerializer):
