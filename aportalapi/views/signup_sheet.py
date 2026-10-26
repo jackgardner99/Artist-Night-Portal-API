@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
+from django.db.models import F
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from aportalapi.models import SignupSheet
+from aportalapi.models import SignupSheet, UserUtilities
 from aportalapi.serializers import SignupSheetSerializer
 from aportalapi.services import google_sheets
 
@@ -51,6 +52,7 @@ class SignupSheetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        UserUtilities.objects.filter(user=self.request.user).update(signup_count=F('signup_count') + 1)
         google_sheets.append_signup(self.request.user)
 
     @action(detail=False, methods=['delete'], url_path='clear')
