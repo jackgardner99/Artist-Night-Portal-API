@@ -11,6 +11,9 @@ Table UserUtilities {
     spotify_link url
     apple_link url
     youtube_link url
+    instagram_link url
+    facebook_link url
+    tiktok_link url
     user_image image
 }
 

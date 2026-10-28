@@ -8,7 +8,8 @@ class UserUtilitiesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserUtilities
-        fields = ['spotify_link', 'apple_link', 'youtube_link', 'user_image', 'signup_count']
+        fields = ['spotify_link', 'apple_link', 'youtube_link', 'instagram_link', 'facebook_link', 'tiktok_link',
+                  'user_image', 'signup_count']
         read_only_fields = ['signup_count']
 
 
@@ -31,18 +32,25 @@ class MyProfileSerializer(serializers.ModelSerializer):
     spotify_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     apple_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     youtube_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
+    instagram_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
+    facebook_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
+    tiktok_link = serializers.URLField(write_only=True, required=False, allow_blank=True)
     marketing_opt_in = serializers.BooleanField(write_only=True, required=False)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'is_superuser', 'utilities',
-                  'user_image', 'spotify_link', 'apple_link', 'youtube_link', 'marketing_opt_in']
+                  'user_image', 'spotify_link', 'apple_link', 'youtube_link', 'instagram_link', 'facebook_link', 'tiktok_link',
+                  'marketing_opt_in']
 
     def update(self, instance, validated_data):
         user_image = validated_data.pop('user_image', None)
         spotify_link = validated_data.pop('spotify_link', None)
         apple_link = validated_data.pop('apple_link', None)
         youtube_link = validated_data.pop('youtube_link', None)
+        instagram_link = validated_data.pop('instagram_link', None)
+        facebook_link = validated_data.pop('facebook_link', None)
+        tiktok_link = validated_data.pop('tiktok_link', None)
         marketing_opt_in = validated_data.pop('marketing_opt_in', None)
 
         instance.first_name = validated_data.get('first_name', instance.first_name)
@@ -58,6 +66,12 @@ class MyProfileSerializer(serializers.ModelSerializer):
             utilities.apple_link = apple_link
         if youtube_link is not None:
             utilities.youtube_link = youtube_link
+        if instagram_link is not None:
+            utilities.instagram_link = instagram_link
+        if facebook_link is not None:
+            utilities.facebook_link = facebook_link
+        if tiktok_link is not None:
+            utilities.tiktok_link = tiktok_link
         if marketing_opt_in is not None:
             utilities.marketing_opt_in = marketing_opt_in
         utilities.save()
@@ -70,12 +84,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
     spotify_link = serializers.URLField(required=False, allow_blank=True)
     apple_link = serializers.URLField(required=False, allow_blank=True)
     youtube_link = serializers.URLField(required=False, allow_blank=True)
+    instagram_link = serializers.URLField(required=False, allow_blank=True)
+    facebook_link = serializers.URLField(required=False, allow_blank=True)
+    tiktok_link = serializers.URLField(required=False, allow_blank=True)
     marketing_opt_in = serializers.BooleanField(required=False, default=False)
 
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name',
-                  'spotify_link', 'apple_link', 'youtube_link', 'marketing_opt_in']
+                  'spotify_link', 'apple_link', 'youtube_link', 'instagram_link', 'facebook_link', 'tiktok_link',
+                  'marketing_opt_in']
         extra_kwargs = {
             'email': {'required': True},
             'first_name': {'required': False, 'allow_blank': True},
@@ -86,6 +104,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         spotify_link = validated_data.pop('spotify_link', '')
         apple_link = validated_data.pop('apple_link', '')
         youtube_link = validated_data.pop('youtube_link', '')
+        instagram_link = validated_data.pop('instagram_link', '')
+        facebook_link = validated_data.pop('facebook_link', '')
+        tiktok_link = validated_data.pop('tiktok_link', '')
         marketing_opt_in = validated_data.pop('marketing_opt_in', False)
 
         user = User.objects.create_user(**validated_data)
@@ -93,6 +114,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.user_utilities.spotify_link = spotify_link
         user.user_utilities.apple_link = apple_link
         user.user_utilities.youtube_link = youtube_link
+        user.user_utilities.instagram_link = instagram_link
+        user.user_utilities.facebook_link = facebook_link
+        user.user_utilities.tiktok_link = tiktok_link
         user.user_utilities.marketing_opt_in = marketing_opt_in
         user.user_utilities.save()
 
@@ -123,12 +147,14 @@ class SignupSheetSerializer(serializers.ModelSerializer):
     chart_file = serializers.SerializerMethodField()
     lyrics_file = serializers.SerializerMethodField()
     signed_up_at = serializers.DateTimeField(source='created_at', read_only=True)
+    signup_count = serializers.ReadOnlyField(source='user.user_utilities.signup_count')
 
     class Meta:
         model = SignupSheet
         fields = [
             'id', 'username', 'first_name', 'last_name', 'user_image',
             'chart', 'chart_file', 'lyrics', 'lyrics_file', 'completed', 'signed_up_at',
+            'signup_count',
         ]
         extra_kwargs = {
             'chart': {'required': False, 'allow_null': True},
